@@ -4,6 +4,9 @@ const Statistics = (props) => {
 	const good = props.good;
 	const bad = props.bad;
 	const neutral = props.neutral;
+	if (good + bad + neutral === 0) {
+		return <p>No feedback given</p>;
+	}
 	return (
 		<div>
 			<h1>statistics</h1>
