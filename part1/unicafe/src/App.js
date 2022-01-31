@@ -10,15 +10,22 @@ const Statistics = (props) => {
 	return (
 		<div>
 			<h1>statistics</h1>
-			<StatisticsLine name="Good" value={good} />
-			<StatisticsLine name="Neutral" value={neutral} />
-			<StatisticsLine name="Bad" value={bad} />
-			<StatisticsLine name="All" value={good + bad + neutral} />
-			<StatisticsLine
-				name="Average"
-				value={(good - bad) / (good + bad + neutral)}
-			/>
-			<StatisticsLine name="Positive" value={good / (good + bad + neutral)} />
+			<table>
+				<tbody>
+					<StatisticsLine name="Good" value={good} />
+					<StatisticsLine name="Neutral" value={neutral} />
+					<StatisticsLine name="Bad" value={bad} />
+					<StatisticsLine name="All" value={good + bad + neutral} />
+					<StatisticsLine
+						name="Average"
+						value={(good - bad) / (good + bad + neutral)}
+					/>
+					<StatisticsLine
+						name="Positive"
+						value={good / (good + bad + neutral)}
+					/>
+				</tbody>
+			</table>
 		</div>
 	);
 };
@@ -29,9 +36,10 @@ const Button = (props) => {
 
 const StatisticsLine = (props) => {
 	return (
-		<p>
-			{props.name}:{props.value}
-		</p>
+		<tr>
+			<td>{props.name}</td>
+			<td>{props.value}</td>
+		</tr>
 	);
 };
 
