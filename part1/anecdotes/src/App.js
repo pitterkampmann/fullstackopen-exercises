@@ -12,13 +12,38 @@ const App = () => {
 	];
 
 	const [selected, setSelected] = useState(0);
+	const [mostVoted, setMostVoted] = useState();
+	const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0]);
+
 	const handleClick = () => {
 		setSelected(Math.floor(Math.random() * anecdotes.length));
 	};
+
+	const handleVote = () => {
+		let copy = [...points];
+		copy[selected] += 1;
+		setPoints(copy);
+
+		let highest = 0;
+		for (var item = 0; item < copy.length; item++) {
+			if (copy[item] > highest) {
+				setMostVoted(item);
+				highest = copy[item];
+			}
+		}
+	};
+
 	return (
 		<div>
-			<p>{anecdotes[selected]}</p>
-			<button onClick={handleClick}>next anecdote</button>
+			<div>
+				<p>{anecdotes[selected]}</p>
+				<button onClick={handleVote}>Vote</button>
+				<button onClick={handleClick}>next anecdote</button>
+			</div>
+			<div>
+				<h1>Most voted anecdote</h1>
+				<p>{anecdotes[mostVoted]}</p>
+			</div>
 		</div>
 	);
 };
