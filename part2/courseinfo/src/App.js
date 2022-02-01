@@ -29,7 +29,7 @@ const Course = (props) => {
 	return (
 		<div>
 			<Header text={props.course.name} />
-			<Content value={props.course.parts} />
+			<Content parts={props.course.parts} />
 			<Sum parts={props.course.parts} />
 		</div>
 	);
@@ -37,8 +37,8 @@ const Course = (props) => {
 
 const Header = (props) => <h1>{props.text}</h1>;
 
-const Content = (props) => {
-	const parts = props.value.map((part) => {
+const Content = ({ parts }) => {
+	const lines = parts.map((part) => {
 		return (
 			<Part
 				name={part.name}
@@ -49,7 +49,7 @@ const Content = (props) => {
 		);
 	});
 
-	return <ul>{parts}</ul>;
+	return <ul>{lines}</ul>;
 };
 
 const Part = (props) => {
@@ -60,9 +60,8 @@ const Part = (props) => {
 	);
 };
 
-const Sum = (props) => {
-	console.log(props);
-	const sum = props.parts.reduce((sum, x) => sum + x.exercises, 0);
+const Sum = ({ parts }) => {
+	const sum = parts.reduce((sum, x) => sum + x.exercises, 0);
 
 	return (
 		<p>
