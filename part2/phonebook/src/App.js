@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 
 const App = () => {
-	const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+	const [persons, setPersons] = useState([
+		{ name: "Arto Hellas", number: "123456789" },
+	]);
 	const [newName, setNewName] = useState("");
+	const [newNumber, setNewNumber] = useState("");
 
 	const templateFn = (newName) => `${newName} is already added to phonebook`;
 
 	const handleNameChange = (event) => {
 		setNewName(event.target.value);
+	};
+
+	const handleNumberChange = (event) => {
+		setNewNumber(event.target.value);
 	};
 
 	const handleSubmit = (event) => {
@@ -16,6 +23,7 @@ const App = () => {
 
 		const newPerson = {
 			name: newName,
+			number: newNumber,
 		};
 
 		var teste = persons.filter((p) => p.name === newPerson.name);
@@ -24,11 +32,16 @@ const App = () => {
 		} else {
 			setPersons(persons.concat(newPerson));
 			setNewName("");
+			setNewNumber("");
 		}
 	};
 
 	const list = persons.map((p) => {
-		return <li key={p.name}>{p.name}</li>;
+		return (
+			<li key={p.name}>
+				{p.name} {p.number}
+			</li>
+		);
 	});
 
 	return (
@@ -38,6 +51,10 @@ const App = () => {
 				<div>
 					name: <input value={newName} onChange={handleNameChange} />
 				</div>
+				<div>
+					number: <input value={newNumber} onChange={handleNumberChange} />
+				</div>
+
 				<div>
 					<button type="submit">add</button>
 				</div>
