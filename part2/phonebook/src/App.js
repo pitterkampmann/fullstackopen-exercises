@@ -4,6 +4,8 @@ const App = () => {
 	const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
 	const [newName, setNewName] = useState("");
 
+	const templateFn = (newName) => `${newName} is already added to phonebook`;
+
 	const handleNameChange = (event) => {
 		setNewName(event.target.value);
 	};
@@ -16,9 +18,13 @@ const App = () => {
 			name: newName,
 		};
 
-		setPersons(persons.concat(newPerson));
-
-		console.log(persons);
+		var teste = persons.filter((p) => p.name === newPerson.name);
+		if (teste.length > 0) {
+			alert(templateFn(newName));
+		} else {
+			setPersons(persons.concat(newPerson));
+			setNewName("");
+		}
 	};
 
 	const list = persons.map((p) => {
