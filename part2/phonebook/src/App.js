@@ -49,38 +49,72 @@ const App = () => {
 		return p.name.toLowerCase().includes(search.toLowerCase());
 	});
 
-	const list = filtered.map((p) => {
-		return (
-			<li key={p.name}>
-				{p.name} {p.number}
-			</li>
-		);
-	});
-
 	return (
 		<div>
 			<h2>Phonebook</h2>
-			<div>
-				filter shown with:{" "}
-				<input value={search} onChange={handleSearchChange} />
-			</div>
-			<h2>Add New</h2>
-			<form onSubmit={handleSubmit}>
+			<Filter search={search} handleSearchChange={handleSearchChange} />
+			<PersonForm
+				handleSubmit={handleSubmit}
+				newName={newName}
+				handleNameChange={handleNameChange}
+				newNumber={newNumber}
+				handleNumberChange={handleNumberChange}
+			/>
+			<h3>Numbers</h3>
+			<Persons persons={filtered} />
+		</div>
+	);
+};
+
+export default App;
+
+const PersonForm = (props) => {
+	return (
+		<div>
+			<h3>Add New</h3>
+			<form onSubmit={props.handleSubmit}>
 				<div>
-					name: <input value={newName} onChange={handleNameChange} />
+					name:
+					<input value={props.newName} onChange={props.handleNameChange} />
 				</div>
 				<div>
-					number: <input value={newNumber} onChange={handleNumberChange} />
+					number:
+					<input value={props.newNumber} onChange={props.handleNumberChange} />
 				</div>
 
 				<div>
 					<button type="submit">add</button>
 				</div>
 			</form>
-			<h2>Numbers</h2>
+		</div>
+	);
+};
+
+const Persons = ({ persons }) => {
+	const list = persons.map((p) => {
+		return <Person key={p.name} name={p.name} number={p.number} />;
+	});
+
+	return (
+		<div>
 			<ul>{list}</ul>
 		</div>
 	);
 };
 
-export default App;
+const Person = ({ name, number }) => {
+	return (
+		<li>
+			{name} {number}
+		</li>
+	);
+};
+
+const Filter = (props) => {
+	return (
+		<div>
+			Filter shown with:{" "}
+			<input value={props.search} onChange={props.handleSearchChange} />
+		</div>
+	);
+};
