@@ -5,6 +5,9 @@ const App = () => {
 	const [countries, setCountries] = useState([]);
 	const [search, setSearch] = useState("");
 	const [filtered, setFiltered] = useState([]);
+	const [weather, setWeather] = useState();
+	const [selectedCountry, setSelectedCountry] = useState();
+	const [capital, setCapital] = useState();
 
 	useEffect(() => {
 		axios.get("https://restcountries.com/v3.1/all").then((response) => {
@@ -22,7 +25,38 @@ const App = () => {
 			return c.name.common.toLowerCase().includes(search.toLowerCase());
 		});
 		setFiltered(filteredCountries);
+
+		if (filteredCountries.length === 1) {
+			setSelectedCountry(filteredCountries[0]);
+		} else {
+			setSelectedCountry();
+			setWeather();
+			setCapital();
+		}
 	}, [search]);
+
+	useEffect(() => {
+		if (selectedCountry)
+			axios
+				.get(
+					`http://api.openweathermap.org/geo/1.0/direct?q=${selectedCountry?.capital},,${selectedCountry?.cca2}&limit=1&appid=${process.env.REACT_APP_API_KEY}`
+				)
+				.then((response) => {
+					setCapital(response.data[0]);
+				});
+	}, [selectedCountry]);
+
+	useEffect(() => {
+		if (capital)
+			axios
+				.get(
+					`http://api.openweathermap.org/data/2.5/weather?lat=${capital?.lat}&lon=${capital?.lon}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+				)
+				.then((response) => {
+					console.log(response);
+					setWeather(response.data);
+				});
+	}, [capital]);
 
 	return (
 		<div>
@@ -35,6 +69,8 @@ const App = () => {
 				countries={filtered}
 				handleSelectCountry={(e) => handleSearch(e)}
 			/>
+			<CountryDetails country={selectedCountry} />
+			<Weather weather={weather} capital={capital} />
 		</div>
 	);
 };
@@ -51,18 +87,15 @@ const Filter = (props) => {
 };
 
 const Countries = ({ countries, handleSelectCountry }) => {
-	const handleSelect = (e) => {
-		handleSelectCountry(e);
-	};
-	if (countries.length <= 10) {
+	if (countries.length > 1 && countries.length <= 10) {
 		const list = countries.map((country) => {
 			return (
-				<Country
-					key={country.cca2}
-					country={country}
-					show={countries.length === 1}
-					handleSelect={(e) => handleSelect(e)}
-				/>
+				<li key={country.cca2}>
+					{country.name.common}
+					<button onClick={() => handleSelectCountry(country.name.common)}>
+						show
+					</button>
+				</li>
 			);
 		});
 		return <>{list}</>;
@@ -71,31 +104,24 @@ const Countries = ({ countries, handleSelectCountry }) => {
 	}
 };
 
-const Country = ({ country, show, handleSelect }) => {
-	if (show) {
+const CountryDetails = ({ country }) => {
+	if (country)
 		return (
 			<div>
 				<h2>{country.name.common}</h2>
 				<p>capital {country.capital[0]}</p>
 				<p>population {country.population}</p>
 				<Languages languages={Object.values(country.languages)} />
-				<img src={country.flags.png} />
+				<img src={country.flags.png} alt={country.name.common} />
 			</div>
 		);
-	}
-	return (
-		<>
-			<li>
-				{country.name.common}
-				<button onClick={() => handleSelect(country.name.common)}>show</button>
-			</li>
-		</>
-	);
+	return <></>;
 };
 
 const Languages = ({ languages }) => {
+	console.log(languages);
 	const list = languages.map((l) => {
-		return <li>{l}</li>;
+		return <li key={l}>{l}</li>;
 	});
 
 	return (
@@ -104,4 +130,18 @@ const Languages = ({ languages }) => {
 			<ul>{list}</ul>
 		</div>
 	);
+};
+
+const Weather = ({ weather, capital }) => {
+	if (weather) {
+		console.log("weather", weather);
+		return (
+			<div>
+				<h3>Weather in {capital?.name}</h3>
+				<p>Temperature {weather?.main?.temp}º celsius</p>
+				<p>Wind {weather?.wind?.speed}km/h</p>
+			</div>
+		);
+	}
+	return <></>;
 };
