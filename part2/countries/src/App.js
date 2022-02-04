@@ -13,18 +13,28 @@ const App = () => {
 	}, []);
 
 	const handleSearch = (e) => {
-		setSearch(e.target.value);
+		console.log(e);
+		setSearch(e);
+	};
+
+	useEffect(() => {
 		const filteredCountries = countries.filter((c) => {
 			return c.name.common.toLowerCase().includes(search.toLowerCase());
 		});
-
 		setFiltered(filteredCountries);
-	};
+	}, [search]);
 
 	return (
 		<div>
-			<Filter countries={countries} handleSearch={handleSearch} />
-			<Countries countries={filtered} />
+			<Filter
+				countries={countries}
+				handleSearch={(e) => handleSearch(e.target.value)}
+				search={search}
+			/>
+			<Countries
+				countries={filtered}
+				handleSelectCountry={(e) => handleSearch(e)}
+			/>
 		</div>
 	);
 };
@@ -34,15 +44,26 @@ export default App;
 const Filter = (props) => {
 	return (
 		<div>
-			find countries <input onChange={props.handleSearch} />
+			find countries{" "}
+			<input onChange={props.handleSearch} value={props.search} />
 		</div>
 	);
 };
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, handleSelectCountry }) => {
+	const handleSelect = (e) => {
+		handleSelectCountry(e);
+	};
 	if (countries.length <= 10) {
 		const list = countries.map((country) => {
-			return <Country country={country} show={countries.length === 1} />;
+			return (
+				<Country
+					key={country.cca2}
+					country={country}
+					show={countries.length === 1}
+					handleSelect={(e) => handleSelect(e)}
+				/>
+			);
 		});
 		return <>{list}</>;
 	} else {
@@ -50,7 +71,7 @@ const Countries = ({ countries }) => {
 	}
 };
 
-const Country = ({ country, show }) => {
+const Country = ({ country, show, handleSelect }) => {
 	if (show) {
 		return (
 			<div>
@@ -61,10 +82,15 @@ const Country = ({ country, show }) => {
 				<img src={country.flags.png} />
 			</div>
 		);
-	} else {
 	}
-
-	return <li>{country.name.common}</li>;
+	return (
+		<>
+			<li>
+				{country.name.common}
+				<button onClick={() => handleSelect(country.name.common)}>show</button>
+			</li>
+		</>
+	);
 };
 
 const Languages = ({ languages }) => {
