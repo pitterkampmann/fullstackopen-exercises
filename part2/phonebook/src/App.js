@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import personService from "./services/persons";
+import "./index.css";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [search, setSearch] = useState("");
+	const [message, setMessage] = useState({ text: "", type: "" });
 
 	const templateFn = (newName) =>
 		`${newName} is already added to phonebook, replace the old number with the new one?`;
@@ -27,9 +29,8 @@ const App = () => {
 		const newPerson = {
 			name: newName,
 			number: newNumber,
-			id: persons.length + 1,
+			id: persons.reduce((current, next) => current.id + next.id),
 		};
-
 		var find = persons.filter((p) => p.name === newPerson.name);
 
 		if (find.length > 0) {
@@ -40,6 +41,11 @@ const App = () => {
 						setPersons(
 							persons.map((p) => (p.id !== find[0].id ? p : response.data))
 						);
+
+						setMessage({ text: `Updated ${newPerson.name}`, type: "success" });
+						setTimeout(() => {
+							setMessage({ text: "", type: "" });
+						}, 5000);
 					})
 					.catch((error) => {
 						alert(`We are unable to update the phone number`);
@@ -52,6 +58,11 @@ const App = () => {
 			personService.create(newPerson).then((response) => {
 				console.log(response);
 				personService.getAll();
+
+				setMessage({ text: `Added ${newPerson.name}`, type: "success" });
+				setTimeout(() => {
+					setMessage({ text: "", type: "" });
+				}, 5000);
 			});
 		}
 	};
@@ -76,6 +87,10 @@ const App = () => {
 				.remove(e.id)
 				.then(() => {
 					getPersons();
+					setMessage({ text: `User removed ${e.name}`, type: "success" });
+					setTimeout(() => {
+						setMessage({ text: "", type: "" });
+					}, 5000);
 				})
 				.catch((error) => {
 					alert(`We are unable to delete the person from the phonebook`);
@@ -85,6 +100,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification message={message} />
 			<Filter search={search} handleSearchChange={handleSearchChange} />
 			<PersonForm
 				handleSubmit={handleSubmit}
@@ -151,4 +167,10 @@ const Filter = (props) => {
 			<input value={props.search} onChange={props.handleSearchChange} />
 		</div>
 	);
+};
+
+const Notification = ({ message }) => {
+	if (message.text && message.type === "success") {
+		return <div className="success">{message.text}</div>;
+	} else return <></>;
 };
