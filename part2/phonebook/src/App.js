@@ -47,12 +47,23 @@ const App = () => {
 		return p.name.toLowerCase().includes(search.toLowerCase());
 	});
 
-	useEffect(() => {
+	const getPersons = () => {
 		personService.getAll().then((response) => {
 			setPersons(response.data);
 		});
+	};
+	useEffect(() => {
+		getPersons();
 	}, []);
 
+	const handleDelete = (e) => {
+		if (window.confirm(`Delete ${e.name}?`)) {
+			console.log(e);
+			personService.remove(e.id).then(() => {
+				getPersons();
+			});
+		}
+	};
 	return (
 		<div>
 			<h2>Phonebook</h2>
@@ -65,7 +76,7 @@ const App = () => {
 				handleNumberChange={handleNumberChange}
 			/>
 			<h3>Numbers</h3>
-			<Persons persons={filtered} />
+			<Persons persons={filtered} handleDelete={handleDelete} />
 		</div>
 	);
 };
@@ -94,9 +105,9 @@ const PersonForm = (props) => {
 	);
 };
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDelete }) => {
 	const list = persons.map((p) => {
-		return <Person key={p.name} name={p.name} number={p.number} />;
+		return <Person key={p.name} person={p} handleDelete={handleDelete} />;
 	});
 
 	return (
@@ -106,10 +117,11 @@ const Persons = ({ persons }) => {
 	);
 };
 
-const Person = ({ name, number }) => {
+const Person = ({ person, handleDelete }) => {
 	return (
 		<li>
-			{name} {number}
+			{person.name} {person.number}
+			<button onClick={() => handleDelete(person)}>delete</button>
 		</li>
 	);
 };
