@@ -93,7 +93,13 @@ const App = () => {
 					}, 5000);
 				})
 				.catch((error) => {
-					alert(`We are unable to delete the person from the phonebook`);
+					setMessage({
+						text: `Information of ${e.name} has already been removed from the server`,
+						type: "error",
+					});
+					setTimeout(() => {
+						setMessage({ text: "", type: "" });
+					}, 5000);
 				});
 		}
 	};
@@ -172,5 +178,9 @@ const Filter = (props) => {
 const Notification = ({ message }) => {
 	if (message.text && message.type === "success") {
 		return <div className="success">{message.text}</div>;
-	} else return <></>;
+	}
+	if (message.text && message.type === "error") {
+		return <div className="error">{message.text}</div>;
+	}
+	return <></>;
 };

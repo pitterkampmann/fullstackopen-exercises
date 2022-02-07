@@ -1,74 +1,29 @@
 {
-  "persons": [
-    {
-      "name": "Ada Lovelace",
-      "number": "21321",
-      "id": 2
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
-      "name": "Pitter Kampmann",
-      "number": "12321",
-      "id": 5
-    },
-    {
-      "name": "Marcel",
-      "number": "123",
-      "id": 6
-    },
-    {
-      "name": "Marcel a",
-      "number": "",
-      "id": 7
-    },
-    {
-      "name": "Marcel o",
-      "number": "",
-      "id": 8
-    },
-    {
-      "name": "21321",
-      "number": "",
-      "id": 9
-    },
-    {
-      "name": "456",
-      "number": "",
-      "id": 10
-    },
-    {
-      "name": "213212",
-      "number": "",
-      "id": 11
-    },
-    {
-      "name": "2342342",
-      "number": "",
-      "id": 12
-    },
-    {
-      "name": "vsada",
-      "number": "",
-      "id": 13
-    },
-    {
-      "name": "asdsadsa",
-      "number": "",
-      "id": 14
-    },
-    {
-      "name": "sadsadad",
-      "number": "",
-      "id": 15
-    },
-    {
-      "name": "asdsadsadsa",
-      "number": "",
-      "id": 16
-    }
-  ]
+	"persons": [
+		{
+			"name": "Dan Abramov",
+			"number": "12-43-234345",
+			"id": 3
+		},
+		{
+			"name": "Pitter Kampmann",
+			"number": "12321",
+			"id": 5
+		},
+		{
+			"name": "Marcel",
+			"number": "123",
+			"id": 6
+		},
+		{
+			"name": "Marcel a",
+			"number": "",
+			"id": 7
+		},
+		{
+			"name": "Marcel o",
+			"number": "",
+			"id": 8
+		}
+	]
 }
