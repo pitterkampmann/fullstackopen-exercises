@@ -28,6 +28,7 @@ const App = () => {
 		const newPerson = {
 			name: newName,
 			number: newNumber,
+			id: persons.length + 1,
 		};
 
 		var teste = persons.filter((p) => p.name === newPerson.name);
@@ -37,6 +38,12 @@ const App = () => {
 			setPersons(persons.concat(newPerson));
 			setNewName("");
 			setNewNumber("");
+			axios
+				.post(" http://localhost:3001/persons", newPerson)
+				.then((response) => {
+					console.log(response);
+					getAll();
+				});
 		}
 	};
 
@@ -44,12 +51,17 @@ const App = () => {
 		return p.name.toLowerCase().includes(search.toLowerCase());
 	});
 
-	useEffect(() => {
+	const getAll = () => {
 		axios.get(" http://localhost:3001/persons").then((response) => {
 			console.log(response);
 			setPersons(response.data);
 		});
+	};
+
+	useEffect(() => {
+		getAll();
 	}, []);
+
 	return (
 		<div>
 			<h2>Phonebook</h2>
