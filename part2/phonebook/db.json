@@ -29,6 +29,11 @@
       "name": "Pitter Kampmann 2",
       "number": "040-123456",
       "id": 6
+    },
+    {
+      "name": "Pitter Kampmann 3",
+      "number": "2 040-123456",
+      "id": 7
     }
   ]
 }

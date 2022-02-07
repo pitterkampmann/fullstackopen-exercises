@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -23,8 +23,6 @@ const App = () => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		console.log(event.target.value);
-
 		const newPerson = {
 			name: newName,
 			number: newNumber,
@@ -38,12 +36,10 @@ const App = () => {
 			setPersons(persons.concat(newPerson));
 			setNewName("");
 			setNewNumber("");
-			axios
-				.post(" http://localhost:3001/persons", newPerson)
-				.then((response) => {
-					console.log(response);
-					getAll();
-				});
+			personService.create(newPerson).then((response) => {
+				console.log(response);
+				personService.getAll();
+			});
 		}
 	};
 
@@ -51,15 +47,10 @@ const App = () => {
 		return p.name.toLowerCase().includes(search.toLowerCase());
 	});
 
-	const getAll = () => {
-		axios.get(" http://localhost:3001/persons").then((response) => {
-			console.log(response);
+	useEffect(() => {
+		personService.getAll().then((response) => {
 			setPersons(response.data);
 		});
-	};
-
-	useEffect(() => {
-		getAll();
 	}, []);
 
 	return (
