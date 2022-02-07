@@ -7,7 +7,8 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState("");
 	const [search, setSearch] = useState("");
 
-	const templateFn = (newName) => `${newName} is already added to phonebook`;
+	const templateFn = (newName) =>
+		`${newName} is already added to phonebook, replace the old number with the new one?`;
 
 	const handleNameChange = (event) => {
 		setNewName(event.target.value);
@@ -29,9 +30,21 @@ const App = () => {
 			id: persons.length + 1,
 		};
 
-		var teste = persons.filter((p) => p.name === newPerson.name);
-		if (teste.length > 0) {
-			alert(templateFn(newName));
+		var find = persons.filter((p) => p.name === newPerson.name);
+
+		if (find.length > 0) {
+			if (window.confirm(templateFn(newName))) {
+				personService
+					.update(find[0].id, { ...find[0], number: newNumber })
+					.then((response) => {
+						setPersons(
+							persons.map((p) => (p.id !== find[0].id ? p : response.data))
+						);
+					})
+					.catch((error) => {
+						alert(`We are unable to update the phone number`);
+					});
+			}
 		} else {
 			setPersons(persons.concat(newPerson));
 			setNewName("");
@@ -59,9 +72,14 @@ const App = () => {
 	const handleDelete = (e) => {
 		if (window.confirm(`Delete ${e.name}?`)) {
 			console.log(e);
-			personService.remove(e.id).then(() => {
-				getPersons();
-			});
+			personService
+				.remove(e.id)
+				.then(() => {
+					getPersons();
+				})
+				.catch((error) => {
+					alert(`We are unable to delete the person from the phonebook`);
+				});
 		}
 	};
 	return (
