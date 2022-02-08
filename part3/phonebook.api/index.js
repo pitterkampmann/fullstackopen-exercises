@@ -32,6 +32,13 @@ app.get("/api/persons", (request, response) => {
 	response.json(persons);
 });
 
+app.get("/api/persons/:id", (request, response) => {
+	const id = Number(request.params.id);
+
+	const person = persons.find((p) => p.id === id);
+	response.json(person);
+});
+
 app.get("/api/persons/info", (request, response) => {
 	const sum = persons.length;
 
