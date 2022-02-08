@@ -6,6 +6,7 @@ app.use(express.json());
 app.use(cors());
 
 var morgan = require("morgan");
+app.use(express.static("build"));
 
 app.use(
 	morgan(function (tokens, req, res) {
