@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 let persons = [
 	{
@@ -52,6 +53,15 @@ app.get("/api/persons/info", (request, response) => {
 
 	response.writeHead(200, { "Content-Type": "text/plain" });
 	response.end(`Phonebook has info for ${sum} people\n ${new Date()}`);
+});
+
+app.post("/api/persons", (request, response) => {
+	const person = {
+		...request.body,
+		id: (Math.random() * (100000 - 5) + 5).toFixed(),
+	};
+	persons.push(person);
+	response.json(person);
 });
 
 const PORT = 3001;
