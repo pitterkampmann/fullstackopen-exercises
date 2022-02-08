@@ -60,8 +60,16 @@ app.post("/api/persons", (request, response) => {
 		...request.body,
 		id: (Math.random() * (100000 - 5) + 5).toFixed(),
 	};
-	persons.push(person);
-	response.json(person);
+
+	const filter = persons.filter((p) => p.name === person.name);
+	if (filter.length > 0) response.status(409).end("name must be unique");
+	if (!person.name || !person.number) {
+		response.status(400).end("name and number cannot be empty");
+	}
+	if (filter.length === 0 && person.name && person.number) {
+		persons.push(person);
+		response.json(person);
+	}
 });
 
 const PORT = 3001;
